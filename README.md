@@ -20,6 +20,6 @@ Database is already populated with two tables and one record each
 
 Just call `PATCH http://localhost:3000:/orders/1`
 
-`order.subscriber.ts` files contains populate logic
+`src/orders/order.subscriber.ts` files contains populate logic
 
 
