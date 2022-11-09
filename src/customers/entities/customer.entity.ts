@@ -22,6 +22,7 @@ export class Customer extends BaseEntity<Customer, 'id'> {
 
   @OneToMany(() => Order, (order) => order.customer, {
     cascade: [Cascade.ALL],
+    orphanRemoval: true,
   })
   orders? = new Collection<Order>(this);
 }

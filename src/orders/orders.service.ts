@@ -46,7 +46,18 @@ export class OrdersService {
     await this.em.persistAndFlush(order);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} order`;
+  async remove(id: number) {
+    const order = await this.orderRepository.findOneOrFail(
+      { id },
+      { populate: ['customer', 'customer.orders'] },
+    );
+
+    const customer = await this.customerRepository.findOneOrFail({
+      id: order.customer.id,
+    });
+
+    customer.orders.remove(order);
+
+    await this.em.flush();
   }
 }

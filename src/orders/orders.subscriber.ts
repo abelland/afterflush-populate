@@ -1,5 +1,4 @@
-import { EntityName, EventSubscriber, Subscriber } from '@mikro-orm/core';
-import { FlushEventArgs } from '@mikro-orm/core/events/EventSubscriber';
+import {EntityName, EventArgs, EventSubscriber, Subscriber} from '@mikro-orm/core';
 import { Order } from './entities/order.entity';
 import { EntityManager } from '@mikro-orm/sqlite';
 
@@ -11,17 +10,8 @@ export class OrdersSubscriber implements EventSubscriber<Order> {
     return [Order];
   }
 
-  async afterFlush(args: FlushEventArgs): Promise<void> {
-    const changeSets = args.uow.getChangeSets();
-
-    for (const changeSet of changeSets) {
-      console.log(changeSet.entity);
-      if (changeSet.entity instanceof Order) {
-        await args.em.populate(changeSet.entity, ['customer']);
-
-        console.log('POPULATED!!');
-        // DO SOMETHING ...
-      }
-    }
+  async afterDelete(args: EventArgs<Order>) {
+    await args.em.populate(args.entity, ['customer']);
+    console.log(args.entity.customer);
   }
 }
